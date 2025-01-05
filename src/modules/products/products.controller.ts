@@ -53,12 +53,12 @@ export class ProductsController {
     async getProducts() {
         try {
             const result = await this.repo.getProducts(1, 10);
-            const baseUrl = "http://localhost:3000";
+            const baseUrl = "https://back-end-ecommerce-typescript-node-jest.onrender.com/images/products/1736080707339-burguer1.png";
             console.log(result)
             const updatedData = result.map(product => ({
                 ...product,
                 image: `${baseUrl}/${product.image.replace('src/', '')}`,
-                img_name: product.image.replace('http://localhost:3000/images/products/', '')
+                img_name: product.image.replace('https://back-end-ecommerce-typescript-node-jest.onrender.com/images/products/1736080707339-burguer1.png/images/products/', '')
             }))
             return {
                 message: 'Products fetched successfully',
