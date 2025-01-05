@@ -53,7 +53,7 @@ export class ProductsController {
     async getProducts() {
         try {
             const result = await this.repo.getProducts(1, 10);
-            const baseUrl = "https://back-end-ecommerce-typescript-node-jest.onrender.com/images/products/1736080707339-burguer1.png";
+            const baseUrl = "https://back-end-ecommerce-typescript-node-jest.onrender.com";
             console.log(result)
             const updatedData = result.map(product => ({
                 ...product,
