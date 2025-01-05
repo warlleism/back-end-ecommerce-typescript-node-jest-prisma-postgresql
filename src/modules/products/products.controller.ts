@@ -58,7 +58,7 @@ export class ProductsController {
             const updatedData = result.map(product => ({
                 ...product,
                 image: `${baseUrl}/${product.image.replace('src/', '')}`,
-                img_name: product.image.replace('https://back-end-ecommerce-typescript-node-jest.onrender.com/images/products/1736080707339-burguer1.png/images/products/', '')
+                img_name: product.image.replace('https://back-end-ecommerce-typescript-node-jest.onrender.com/images/products/', '')
             }))
             return {
                 message: 'Products fetched successfully',
