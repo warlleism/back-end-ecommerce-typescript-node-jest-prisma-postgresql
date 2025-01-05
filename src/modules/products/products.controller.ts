@@ -53,12 +53,11 @@ export class ProductsController {
     async getProducts() {
         try {
             const result = await this.repo.getProducts(1, 10);
-            const baseUrl = "https://back-end-ecommerce-typescript-node-jest.onrender.com";
-            console.log(result)
+            const baseUrl = "https://rapide-back-end.onrender.com";
             const updatedData = result.map(product => ({
                 ...product,
                 image: `${baseUrl}/${product.image.replace('src/', '')}`,
-                img_name: product.image.replace('https://back-end-ecommerce-typescript-node-jest.onrender.com/images/products/', '')
+                img_name: product.image.replace('https://rapide-back-end.onrender.com/images/products/', '')
             }))
             return {
                 message: 'Products fetched successfully',
