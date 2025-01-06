@@ -12,10 +12,20 @@ export class ProductsRepository {
     };
 
     async getProducts(page: number, pageSize: number) {
+        
         const skip = (page - 1) * pageSize;
-        const take = pageSize
+        const take = pageSize;
+        const total = await this.prisma.rapideProducts.count();
         const result = await this.prisma.rapideProducts.findMany({ skip, take });
-        return result;
+
+        return {
+            result,
+            pagination: {
+                total,
+                page,
+                totalPages: Math.ceil(total / pageSize)
+            }
+        };
     };
 
     async getOneProduct(productid: number) {

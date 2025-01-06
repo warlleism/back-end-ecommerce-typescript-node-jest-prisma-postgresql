@@ -12,8 +12,9 @@ export class ProductsController {
     @Post('create')
     @UseInterceptors(FileInterceptor('image'))
     async createProduct(@UploadedFile() file: Express.Multer.File, @Body() data: any) {
+
         const folderPath = path.join(__dirname, '../../../src/images/products');
-        console.log(folderPath)
+
         if (!fs.existsSync(folderPath)) {
             fs.mkdirSync(folderPath, { recursive: true });
         }
@@ -27,13 +28,15 @@ export class ProductsController {
 
         try {
             const newFileName = `${Date.now()}-${file.originalname}`;
-            const filePath = path.join(folderPath, newFileName);
-            fs.writeFileSync(filePath, file.buffer);
+
 
             data.image = `src/images/products/${newFileName}`;
             data.price = Number(data.price);
 
             const result = await this.repo.createProduct(data);
+
+            const filePath = path.join(folderPath, newFileName);
+            fs.writeFileSync(filePath, file.buffer);
 
             return {
                 message: 'Product created successfully',
@@ -50,11 +53,13 @@ export class ProductsController {
     }
 
     @Get('get')
-    async getProducts() {
+    async getProducts(@Query('page') page: number, @Query('pagesize') pageSize: number) {
         try {
-            const result = await this.repo.getProducts(1, 10);
-            const baseUrl = "https://rapide-back-end.onrender.com";
-            const updatedData = result.map(product => ({
+
+            const result = await this.repo.getProducts(+page, +pageSize);
+            const baseUrl = "http://localhost:3000";
+
+            const updatedData = result.result.map(product => ({
                 ...product,
                 image: `${baseUrl}/${product.image.replace('src/', '')}`,
                 img_name: product.image.replace('src/images/products/', '')
@@ -62,6 +67,7 @@ export class ProductsController {
             return {
                 message: 'Products fetched successfully',
                 data: updatedData,
+                pagination: result.pagination,
                 status: HttpStatus.OK
             }
         } catch (error) {
@@ -87,8 +93,6 @@ export class ProductsController {
             }
 
             const newFileName = `${Date.now()}-${file.originalname}`;
-            const filePath = path.join(__dirname, `../../../src/images/products/${newFileName}`);
-            fs.writeFileSync(filePath, file.buffer);
 
             const fileToDeletePath = path.join(__dirname, `../../../src/images/products`, data.img_name);
 
@@ -103,6 +107,10 @@ export class ProductsController {
             const { img_name, ...rest } = data;
 
             const result = await this.repo.updateProduct(data.id, rest);
+
+            const filePath = path.join(__dirname, `../../../src/images/products/${newFileName}`);
+            fs.writeFileSync(filePath, file.buffer);
+
             return {
                 message: 'Product updated successfully',
                 data: result,
